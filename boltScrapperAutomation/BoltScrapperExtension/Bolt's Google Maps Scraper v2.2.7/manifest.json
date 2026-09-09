@@ -1,0 +1,78 @@
+{
+    "manifest_version": 3,
+    "name": "Bolt's Google Maps Scraper",
+    "version": "2.2.7",
+    "description": "Scrapes business listings from Google Maps search results.",
+    "icons": {
+      "16": "assets/logo.png",
+      "48": "assets/logo.png",
+      "128": "assets/logo.png"
+    },
+    "action": {
+      "default_title": "Open Google Maps Scraper"
+    },
+    "permissions": [
+      "storage",
+      "downloads",
+      "scripting",
+      "alarms",
+      "power" 
+    ],
+    "host_permissions": [
+      "<all_urls>"
+    ],
+    "background": {
+      "service_worker": "js/background.js"
+    },
+     "content_security_policy": {
+      "extension_pages": "script-src 'self'; object-src 'self'"
+    },
+    "commands": {
+      "_execute_action": {
+        "suggested_key": {
+          "default": "Ctrl+B",
+          "mac": "Command+B"
+        },
+        "description": "Open Google Maps Scraper"
+      }
+    },
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvxBIMD5rT6/bCU93BEaZlZBHng0syp5tAQH/q0MeAFVXDL4XLbCOGI4EUfSQI0AzVXU3RwAwaJ7VB6jiOeL8UiLIJGDTLQ7GBzl0MMLgRREDYbC2FkdPSnhgCVgEwv7tkG7+GzX/t4TN0qurYk05OH/KwWAqjF7xjuvwMJenW4JwBP/MfAG39N5V6eB9iXsqimvDnJNYYcUl2ykJ68mKhHD/QaSXvQKa5CyGYOQwjEDkpEeR+FJMe87jTQvcPj2BMH3kD89WZzZLvofRBrptm5CxxK64c1IqgDkk2BnYRZNzl15E3C43FJ8sMJwQvB7GkOgUcXnOeHgqMi8N/y3l3wIDAQAB",
+    "browser_specific_settings": {
+      "edge": {
+        "browser_action_next_to_address_bar": true
+      }
+    },
+    "web_accessible_resources": [
+      {
+        "resources": [
+          "html/newtab.html",
+          "html/view.js",
+          "js/newtab.js",
+          "js/main.js",
+          "js/db.js",
+          "js/scraper.js",
+          "js/vendor/csv.min.js",
+          "js/vendor/xlsx.min.js",
+          "js/vendor/dodo-payments.js",
+          "js/plan-payment.js",
+          "js/success.js",
+          "core/get.js",
+          "core/setting.js",
+          "core/update.js",
+          "core/tel.js",
+          "core/csvtel.js",
+          "core/license.js",
+          "core/jwt.js",
+          "core/firebase/firebase-app-compat.js",
+          "core/firebase/firebase-auth-compat.js",
+          "core/awake.js",
+          "css/look.js",
+          "assets/logo.png",
+          "service.js",
+          "plan/plan.html",
+          "plan/success.html"
+        ],
+        "matches": ["<all_urls>"]
+      }
+    ]
+  }

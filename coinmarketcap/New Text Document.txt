@@ -1,0 +1,214 @@
+// Improved verification email checker that properly handles CoinMarketCap links
+async function checkForVerificationEmail(page, email, provider) {
+  console.log(`🔍 Looking for verification email for ${email}...`);
+
+  const maxRetries = 5;
+  let retryCount = 0;
+  let verificationUrl = null;
+
+  // First, check if we're already on a verification page
+  const currentUrl = await page.url();
+  console.log(`📄 Current page URL: ${currentUrl}`);
+
+  if (currentUrl.includes("link.coinmarketcap.com")) {
+    console.log(`✅ Already on CoinMarketCap verification link page!`);
+    return currentUrl;
+  }
+
+  while (retryCount < maxRetries && !verificationUrl) {
+    try {
+      // Get the current URL again in case it changed
+      const checkUrl = await page.url();
+      if (checkUrl.includes("link.coinmarketcap.com")) {
+        console.log(
+          `✅ Already on CoinMarketCap verification link: ${checkUrl}`
+        );
+        return checkUrl;
+      }
+
+      // Refresh the page for each retry except the first
+      if (retryCount > 0) {
+        console.log(
+          `🔄 Refreshing inbox (attempt ${retryCount + 1}/${maxRetries})...`
+        );
+        await page.reload({ waitUntil: "networkidle2", timeout: 30000 });
+      }
+
+      await sleep(10000); // Wait for emails to load
+
+      // Special handling for temp-mail.io provider
+      if (provider === "temp-mail.io") {
+        try {
+          console.log("🔍 Looking for emails in temp-mail.io interface...");
+
+          // Wait for email list to be available
+          await page.waitForSelector(
+            'li[data-v-dfc721ac][data-v-778697af][class*="message list-complete-item"]',
+            { timeout: 15000 }
+          );
+
+          // Click the first email in the list
+          const emailFound = await page.evaluate(() => {
+            const emailElement = document.querySelector(
+              'li[data-v-dfc721ac][data-v-778697af][class*="message list-complete-item"]'
+            );
+            if (emailElement) {
+              emailElement.click();
+              return true;
+            }
+            return false;
+          });
+
+          if (emailFound) {
+            console.log("✅ Clicked on email in temp-mail.io interface");
+
+            // Wait for the email content to load
+            await sleep(3000);
+
+            // Look for verification link in the opened email
+            const verificationLink = await page.evaluate(() => {
+              // Try finding the link with the specific attributes
+              const link = document.querySelector(
+                'a[href*="link.coinmarketcap.com"]'
+              );
+              if (link) return link.href;
+
+              // If not found directly, try the XPath
+              const allLinks = Array.from(document.querySelectorAll("a"));
+              return allLinks.find(
+                (a) => a.href && a.href.includes("link.coinmarketcap.com")
+              )?.href;
+            });
+
+            if (verificationLink) {
+              console.log(
+                `✅ Found verification link in temp-mail.io email: ${verificationLink}`
+              );
+              return verificationLink;
+            } else {
+              console.log("❌ No verification link found in the opened email");
+            }
+          } else {
+            console.log("❌ No emails found in temp-mail.io interface");
+          }
+        } catch (error) {
+          console.error(
+            `❌ Error processing temp-mail.io email: ${error.message}`
+          );
+        }
+      } else {
+        // Original code for other providers
+        // Look for any coinmarketcap links on the page
+        try {
+          const cmcLinks = await page.evaluate(() => {
+            // Get all links that contain coinmarketcap
+            const links = Array.from(
+              document.querySelectorAll('a[href*="coinmarketcap"]')
+            );
+            return links.map((link) => link.href);
+          });
+
+          if (cmcLinks.length > 0) {
+            console.log(
+              `✅ Found ${cmcLinks.length} CoinMarketCap links on page`
+            );
+            // Filter links to prioritize verification links
+            const verificationLinks = cmcLinks.filter(
+              (link) =>
+                link.includes("link.coinmarketcap.com") ||
+                link.includes("verify") ||
+                link.includes("account-verification")
+            );
+
+            // Use verification link if found, otherwise use first link
+            const linkToUse =
+              verificationLinks.length > 0 ? verificationLinks[0] : cmcLinks[0];
+            console.log(`📋 Using link: ${linkToUse}`);
+
+            // Return the link directly without navigating to it
+            // The verification process will use this link in the next step
+            return linkToUse;
+          }
+        } catch (e) {
+          console.log(`❌ Error finding CoinMarketCap links: ${e.message}`);
+        }
+
+        // Direct XPath approach as fallback
+        try {
+          const [verificationLink] = await page.$x(
+            "/html/body/main/div[1]/div/div[2]/div[2]/div/div[1]/div/div[4]/ul/li[2]/div[2]/span/a"
+          );
+          if (verificationLink) {
+            console.log("✅ Found verification email with direct XPath");
+
+            // Extract href without clicking
+            const linkHref = await page.evaluate(
+              (el) => el.href,
+              verificationLink
+            );
+            console.log(`🔗 Link href: ${linkHref}`);
+
+            // If it's a coinmarketcap link, return it directly
+            if (linkHref.includes("coinmarketcap.com")) {
+              return linkHref;
+            }
+
+            // Otherwise click it to see where it goes
+            await verificationLink.click();
+            console.log("✅ Clicked verification email link");
+            await sleep(5000);
+
+            // Check if we navigated to a CoinMarketCap page
+            const newUrl = await page.url();
+            if (
+              newUrl.includes("coinmarketcap.com") ||
+              newUrl.includes("link.coinmarketcap.com")
+            ) {
+              return newUrl;
+            }
+          }
+        } catch (e) {
+          console.log(`❌ Error with XPath approach: ${e.message}`);
+        }
+
+        // General link finding approach as last resort
+        try {
+          const allLinks = await page.evaluate(() => {
+            return Array.from(document.querySelectorAll("a"))
+              .filter(
+                (link) =>
+                  link.textContent.toLowerCase().includes("verify") ||
+                  link.textContent.toLowerCase().includes("confirm") ||
+                  link.href.includes("coinmarketcap")
+              )
+              .map((link) => link.href);
+          });
+
+          if (allLinks.length > 0) {
+            console.log(
+              `✅ Found ${allLinks.length} potential verification links`
+            );
+            return allLinks[0]; // Return the link directly
+          }
+        } catch (e) {
+          console.log(`❌ Error with general link approach: ${e.message}`);
+        }
+      }
+
+      retryCount++;
+      console.log(
+        `⏳ Waiting 10 seconds before retry ${retryCount}/${maxRetries}...`
+      );
+      await sleep(10000);
+    } catch (error) {
+      console.error(`❌ Error in verification email check: ${error.message}`);
+      retryCount++;
+      await sleep(5000);
+    }
+  }
+
+  console.error(
+    `❌ Failed to find verification link after ${maxRetries} attempts`
+  );
+  return null;
+}

@@ -1,0 +1,12 @@
+2024-11-16 17:05:45,620 - instabot version: 0.117.0 (bot) - INFO - Instabot version: 0.117.0 Started
+2024-11-16 17:05:45,621 - instabot version: 0.117.0 (bot) - DEBUG - Bot imported from D:\Installed\Python\Lib\site-packages\instabot\bot\bot.py
+2024-11-16 17:05:47,809 - instabot version: 0.117.0 (api_login) - INFO - Not yet logged in starting: PRE-LOGIN FLOW!
+2024-11-16 17:05:48,349 - instabot version: 0.117.0 (api) - DEBUG - POST to endpoint: accounts/get_prefill_candidates/ returned response: <Response [200]>
+2024-11-16 17:05:48,883 - instabot version: 0.117.0 (api) - DEBUG - POST to endpoint: qe/sync/ returned response: <Response [200]>
+2024-11-16 17:05:49,409 - instabot version: 0.117.0 (api) - DEBUG - POST to endpoint: launcher/sync/ returned response: <Response [200]>
+2024-11-16 17:05:49,962 - instabot version: 0.117.0 (api) - DEBUG - POST to endpoint: accounts/contact_point_prefill/ returned response: <Response [200]>
+2024-11-16 17:05:52,026 - instabot version: 0.117.0 (api) - DEBUG - POST to endpoint: accounts/login/ returned response: <Response [400]>
+2024-11-16 17:05:52,026 - instabot version: 0.117.0 (api) - DEBUG - Responsecode indicates error; response content: b'{"message":"challenge_required","challenge":{"url":"https://i.instagram.com/challenge/AXFbHNFgvF8ig2mMHucpEC8333UQC__5DOJVMsO43XUuSeS5mVD0Wc_gw_BNSgW8Z845p9Y/Afwc6hfI_xHFoTJGac7VsNMJRksA2yMcW_74g1vHkLupsfNUh1Fds29vjrlavF9XintdeRHLoidQsA/","api_path":"/challenge/AXFbHNFgvF8ig2mMHucpEC8333UQC__5DOJVMsO43XUuSeS5mVD0Wc_gw_BNSgW8Z845p9Y/Afwc6hfI_xHFoTJGac7VsNMJRksA2yMcW_74g1vHkLupsfNUh1Fds29vjrlavF9XintdeRHLoidQsA/","hide_webview_header":true,"lock":true,"logout":false,"native_flow":true,"flow_render_type":0},"status":"fail","error_type":"checkpoint_challenge_required"}'
+2024-11-16 17:05:52,026 - instabot version: 0.117.0 (api) - ERROR - Request returns 400 error!
+2024-11-16 17:05:52,027 - instabot version: 0.117.0 (api) - INFO - Instagram's error message: challenge_required
+2024-11-16 17:05:52,027 - instabot version: 0.117.0 (api) - INFO - Error type: checkpoint_challenge_required

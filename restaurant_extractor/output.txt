@@ -1,0 +1,25 @@
+Error restaurant-dynasty.de : Message: no such window: target window already closed
+from unknown error: web view not found
+  (Session info: chrome=129.0.6668.60)
+Stacktrace:
+	GetHandleVerifier [0x00EE7143+25587]
+	(No symbol) [0x00E7A2E4]
+	(No symbol) [0x00D72113]
+	(No symbol) [0x00D4E23B]
+	(No symbol) [0x00DE179F]
+	(No symbol) [0x00DF4CB9]
+	(No symbol) [0x00DDA936]
+	(No symbol) [0x00DABA73]
+	(No symbol) [0x00DAC4CD]
+	GetHandleVerifier [0x011C4C63+3030803]
+	GetHandleVerifier [0x01216B99+3366473]
+	GetHandleVerifier [0x00F795F2+624802]
+	GetHandleVerifier [0x00F80E6C+655644]
+	(No symbol) [0x00E82C9D]
+	(No symbol) [0x00E7FD68]
+	(No symbol) [0x00E7FF05]
+	(No symbol) [0x00E72336]
+	BaseThreadInitThunk [0x764B7BA9+25]
+	RtlInitializeExceptionChain [0x77BBC11B+107]
+	RtlClearBits [0x77BBC09F+191]
+

@@ -1,0 +1,13 @@
+# Core Selenium packages
+selenium>=4.15.0
+webdriver-manager>=4.0.1
+
+# GoLogin integration
+gologin>=0.0.5
+
+# AI providers
+openai>=2.15.0
+google-genai>=1.59.0
+
+# Additional dependencies
+requests>=2.31.0
